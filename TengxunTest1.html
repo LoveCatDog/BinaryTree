@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        var pubsub = (function () {
+            var q = {}
+            topics = {},
+                subUid = -1;
+            //发布消息
+            q.publish = function (topic, args) {
+                //判断有没有当前的话题
+                if (!topics[topic]) {
+                    return;
+                }
+                var subs = topics[topic], //当前话题订阅者数组
+                    len = subs.length;
+                while (len--) {
+                    subs[len].func(topic, args);
+                }
+                return this;
+            };
+            //订阅事件
+            //接收两个参数 要订阅的话题，处理程序
+            q.subscribe = function (topic, func) {
+                //如果当前话题已经有订阅者，获取到订阅者数组
+                //一个话题名下的 订阅者事件可以是多个fn1, fn2, fn3
+                topics[topic] = topics[topic] ? topics[topic] : [];
+
+                //给每个订阅者添加唯一的token
+                var token = (++subUid).toString();
+                topics[topic].push({
+                    token: token,
+                    func: func
+                });
+                return token;
+            };
+            return q;
+        })();
+        //触发的事件(订阅者的处理程序)
+        var logmsg1 = function (topics, data) {
+            console.log("logging1:" + topics + ":" + data);
+        }
+
+        var logmsg2 = function (topic, data) {
+            console.log("logging2:" + topic + ":" + data, '我是订阅者2');
+        }
+        //监听指定的消息'msgName'
+        var sub1 = pubsub.subscribe('msgName', logmsg1);
+        var sub2 = pubsub.subscribe('msgName', logmsg2);
+        //pubsub.unsubscribe(sub1)
+        //发布消息'msgName'
+        pubsub.publish('msgName', 'hello world');
+        //发布无人监听的消息'msgName1'
+        pubsub.publish('anotherMsgName', 'me too!');
+    </script>
+</body>
+
+</html>
