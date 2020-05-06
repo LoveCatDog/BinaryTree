@@ -124,3 +124,40 @@ var sub = pubsub.subscribe('msgName', logmsg);
 pubsub.publish('msgName', 'hello world');
 //发布无人监听的消息'msgName1'
 pubsub.publish('anotherMsgName', 'me too!');
+
+/**
+ * 1、原生js去重(数组中的类型不同，考虑去重)
+ * @param {Array} arr 
+ */
+
+ function arrayUnique(arr){
+   let obj = {},
+       newArr = [],
+       value;
+    for (let i = 0; i < arr.length; i++) {
+        value = arr[i];
+        if (!obj[value]) {
+            obj[value] = value;
+            newArr.push(value);
+        }
+    }
+    return newArr;
+}
+
+/**
+ * 2、原生js去重(数组中的类型不同，不考虑去重)
+ * @param {Array} arr 
+ */
+function arrayUniqueType(arr){
+   let newArr=[],
+       value;
+  for (var i = 0; i < arr.length; i++) {
+    for (var j = i+1; j < arr.length; j++) {
+      if(arr[i]===arr[j]){
+         i=i+1;
+      }
+    }
+      newArr.push(arr[i]);
+  }
+  return newArr;
+}
