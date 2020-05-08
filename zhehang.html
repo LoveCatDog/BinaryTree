@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>js递归折行</title>
+</head>
+
+<body>
+    <script type="text/javascript">
+    /**
+    * js递归调用,处理字符串,每n个换一行 ,单词不折行
+    * @param {String} str 字符串
+    * @param {Number} n 每行固定字符串个数
+    */
+  function addStrLine(str,number){
+    var newArr=[];
+    var targetStr,// 目标字符串
+        addStr =  ' ',// 截取后添加的字符串
+        sliceLength = str.length;// 截取字符串长度
+    var array=str.split(' ');//将字符串根据空格截取转化为数组 
+    for (let i = 0; i < array.length; i++) {
+        targetStr   = array[i];  
+        var count=0;;//记录某行存了几个单词
+        for (let j = i+1; j < array.length; j++) {
+            const nextStr = array[j];
+            if( targetStr.length <  number){
+                count=j 
+                targetStr= insertString(targetStr,sliceLength,addStr,nextStr)
+            }else{
+                i=count+1
+                targetStr=targetStr
+            } 
+        }
+            newArr.push(targetStr);
+    }
+    return newArr.join('\n')
+    }
+    function  insertString(targetStr,sliceLength,addStr,nextStr) {
+        targetStr= targetStr.slice(0,sliceLength) + addStr + nextStr;
+        return targetStr;
+    }
+
+    var text=`Falling in love with yourself first doesn’t make you vain or selfish, it makes you indestructible.`;
+    var number=20;
+    console.log(addStrLine1(text,number))
+</script>
+
+</body>
+
+</html>
